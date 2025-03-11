@@ -4,32 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.x/dist/vuetify.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <style>
+        .completed span {
+            text-decoration: line-through;
+            color: grey;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
-        <h1>Мой To-Do List</h1>
-        <input v-model="newTask" @keyup.enter="addTask" placeholder="Добавить новую задачу">
-        <ul>
-            <li v-for="(task, index) in filteredTasks" :key="index" :class="{ completed: task.completed }">
-                <input type="checkbox" v-model="task.completed">
-                <span>{{ task.text }}</span>
-                <button @click="removeTask(index)">Удалить</button>
-            </li>
-        </ul>
-        <div class="controls">
-            <span>{{ remainingTasks }} задач(и) осталось</span>
-            <div>
-                <button @click="filter = 'all'" :class="{ active: filter === 'all' }">Все</button>
-                <button @click="filter = 'active'" :class="{ active: filter === 'active' }">Активные</button>
-                <button @click="filter = 'completed'" :class="{ active: filter === 'completed' }">Завершенные</button>
-            </div>
-        </div>
+        <v-app>
+            <v-container>
+                <h1>Мой To-Do List</h1>
+                <v-text-field
+                    v-model="newTask"
+                    @keyup.enter="addTask"
+                    placeholder="Добавить новую задачу"
+                    outlined
+                    clearable
+                ></v-text-field>
+                <v-list>
+                    <v-list-item v-for="(task, index) in filteredTasks" :key="index" :class="{ completed: task.completed }">
+                        <v-checkbox v-model="task.completed" color="primary"></v-checkbox>
+                        <v-list-item-title>{{ task.text }}</v-list-item-title>
+                        <v-btn @click="removeTask(index)" icon color="red">
+                            <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                    </v-list-item>
+                </v-list>
+                <div class="controls">
+                    <span>{{ remainingTasks }} задач(и) осталось</span>
+                    <div>
+                        <v-btn @click="filter = 'all'" :class="{ active: filter === 'all' }">Все</v-btn>
+                        <v-btn @click="filter = 'active'" :class="{ active: filter === 'active' }">Активные</v-btn>
+                        <v-btn @click="filter = 'completed'" :class="{ active: filter === 'completed' }">Завершенные</v-btn>
+                    </div>
+                </div>
+            </v-container>
+        </v-app>
     </div>
-
     <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.x/dist/vuetify.min.js"></script>
     <script>
-        const app = Vue.createApp({
+        const { createApp } = Vue;
+
+        const app = createApp({
             data() {
                 return {
                     newTask: '',
@@ -62,7 +83,9 @@
                     this.tasks.splice(index, 1);
                 }
             }
-        }).mount('#app');
+        });
+        app.use(Vuetify.createVuetify());
+        app.mount('#app');
     </script>
 </body>
 </html>
